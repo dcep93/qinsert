@@ -10,7 +10,7 @@ var views = path.join(path.dirname(require.main.filename), 'views');
 
 router.get('/', function(req, res) {
 	res.render(index, {
-		title: 'QOrder',
+		title: 'Timeline',
 		views: views,
 	});
 });

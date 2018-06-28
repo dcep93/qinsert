@@ -74,7 +74,7 @@ function update() {
 
 	if (state.currentPlayer < 0) return victory();
 
-	show('#qorder_game');
+	show('#timeline_game');
 
 	$('#game_players').empty();
 	state.players.forEach(function(player) {
