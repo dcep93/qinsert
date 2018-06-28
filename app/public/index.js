@@ -175,16 +175,22 @@ function play() {
 
 function isCorrect(pickIndex, position) {
 	if (position !== 0) {
+		if (equal(pickIndex, position - 1)) return true;
 		if (pickIndex < state.board[position - 1]) {
 			return false;
 		}
 	}
 	if (position !== state.board.length) {
+		if (equal(pickIndex, position)) return true;
 		if (pickIndex > state.board[position]) {
 			return false;
 		}
 	}
 	return true;
+}
+
+function equal(index1, index2) {
+	return state.terms[index1].definition === state.board[index2].definition;
 }
 
 function showImg(data) {
