@@ -7,6 +7,7 @@ var apiUrl = 'https://quizlet.com/webapi/3.1/';
 var termsUrl = apiUrl + 'terms?filters[isDeleted]=0&filters[setId]=';
 var setUrl = apiUrl + 'sets/';
 var searchUrl = setUrl + 'search?filters[isDeleted]=0&perPage=9&query=';
+var folderUrl = apiUrl + 'folder-sets?filters[folderId]=49189251&filters[isDeleted]=0';
 router.get('/', function(req, res) {
 	var setId = req.query.id;
 	if (!(Number(setId) > 0)) {
@@ -23,7 +24,7 @@ router.get('/', function(req, res) {
 function get(url, callback) {
 	request({ uri: url, method: 'GET' }, function(error, resp, body) {
 		if (error || resp.statusCode !== 200) {
-			console.log(query);
+			console.log(url);
 			console.error('error', error);
 			console.error(JSON.stringify(JSON.parse(body), null, 2));
 		} else {
@@ -34,7 +35,7 @@ function get(url, callback) {
 }
 
 function getSet(setId, res) {
-	var title;
+	var title = setToTitle[setId];
 	var terms;
 	function sendSet() {
 		res.send({ title: title, terms: terms, id: setId });
@@ -57,12 +58,40 @@ function getSet(setId, res) {
 			sendSet();
 		}
 	});
-	get(setUrl + setId, function(response) {
-		title = response.models.set[0].title;
-		if (terms !== undefined) {
-			sendSet();
+	if (title === undefined) {
+		get(setUrl + setId, function(response) {
+			title = response.models.set[0].title;
+			if (terms !== undefined) {
+				sendSet();
+			}
+		});
+	}
+}
+
+setToTitle = {};
+router.get('/sets', function(req, res) {
+	get(folderUrl, function(response) {
+		var models = response.models.folderSet;
+		var count = models.length;
+		function done() {
+			if (--count === 0) {
+				res.send(setToTitle);
+			}
+		}
+		for (var i = 0; i < models.length; i++) {
+			var setId = models[i].setId;
+			(function(setId) {
+				if (setToTitle[setId] !== undefined) {
+					done();
+				} else {
+					get(setUrl + setId, function(response) {
+						setToTitle[setId] = response.models.set[0].title;
+						done();
+					});
+				}
+			})(setId);
 		}
 	});
-}
+});
 
 module.exports = router;

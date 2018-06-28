@@ -11,6 +11,9 @@ $(document).ready(function() {
 	$('#door').click(door);
 	$('#leave').click(leave);
 	$('#set_id_form').submit(prepare);
+	$('#set_id_input').on('input', function() { $('#set_id_select').val('select_set'); });
+	$('#set_id_select').change(selectSet);
+	loadSets();
 });
 
 function newState() {
@@ -18,11 +21,24 @@ function newState() {
 	return {};
 }
 
+function loadSets() {
+	$.get('query/sets', function(response) {
+		for (var setId in response) {
+			$('<option>').val(setId).text(response[setId]).appendTo('#set_id_select');
+		}
+	});
+}
+
+function selectSet() {
+	var val = Number.parseInt($(this).val());
+	if (!isNaN(val)) $('#set_id_input').val(val);
+}
+
 function prepare() {
 	var setId = $('#set_id_input').val();
 	$.get('query?id=' + setId, function(response) {
 		state.title = response.title;
-		state.setId = response.setId;
+		state.setId = response.id;
 		state.terms = response.terms;
 		state.currentPlayer = adminIndex;
 		// todo address equal terms

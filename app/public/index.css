@@ -11,6 +11,10 @@
 	height: 50px;
 }
 
+#set_id_select {
+	width: 120px;
+}
+
 .card {
 	width: 150px;
 }
