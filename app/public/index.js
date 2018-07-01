@@ -8,8 +8,6 @@
 // state.setId int
 
 $(document).ready(function() {
-	$('#door').click(door);
-	$('#leave').click(leave);
 	$('#set_id_form').submit(prepare);
 	$('#set_id_input').on('input', function() { $('#set_id_select').val('select_set'); });
 	$('#set_id_select').change(selectSet);
@@ -175,14 +173,16 @@ function play() {
 
 function isCorrect(pickIndex, position) {
 	if (position !== 0) {
-		if (equal(pickIndex, position - 1)) return true;
-		if (pickIndex < state.board[position - 1]) {
+		var other = state.board[position - 1];
+		if (equal(pickIndex, other)) return true;
+		if (pickIndex < other) {
 			return false;
 		}
 	}
 	if (position !== state.board.length) {
-		if (equal(pickIndex, position)) return true;
-		if (pickIndex > state.board[position]) {
+		var other = state.board[position];
+		if (equal(pickIndex, other)) return true;
+		if (pickIndex > other) {
 			return false;
 		}
 	}
@@ -190,7 +190,7 @@ function isCorrect(pickIndex, position) {
 }
 
 function equal(index1, index2) {
-	return state.terms[index1].definition === state.board[index2].definition;
+	return state.terms[index1].definition === state.terms[index2].definition;
 }
 
 function showImg(data) {

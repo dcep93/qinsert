@@ -13,14 +13,7 @@
 <%- include(views+'/pre.html') %>
 
 <div id="global_controls" class="bubble inline">
-	<div>
-		<p>Players:</p>
-		<div id="players" class="bubble inline"></div>
-	</div>
-	<div class="space">
-		<button id="door"></button>
-		<button id="leave">Leave</button>
-	</div>
+	<%- include(views+'/global_controls.html') %>
 	<p>Hand Size: <input id="hand_size" class="control_number" type="number" autocomplete="off" value="6"></p>
 	<p>Board Starting Size: <input id="board_size" class="control_number" type="number" autocomplete="off" value="6"></p>
 	<form id="set_id_form">
