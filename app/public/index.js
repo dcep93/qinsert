@@ -7,10 +7,12 @@
 // state.title string
 // state.setId int
 
-$(document).ready(function() {
-	$('#set_id_form').submit(prepare);
-	$('#set_id_input').on('input', function() { $('#set_id_select').val('select_set'); });
-	$('#set_id_select').change(selectSet);
+$(document).ready(function () {
+	$("#set_id_form").submit(prepare);
+	$("#set_id_input").on("input", function () {
+		$("#set_id_select").val("select_set");
+	});
+	$("#set_id_select").change(selectSet);
 	loadSets();
 });
 
@@ -20,44 +22,47 @@ function newState() {
 }
 
 function loadSets() {
-	$.get('query/sets', function(response) {
+	$.get("query/sets", function (response) {
 		for (var setId in response) {
-			$('<option>').val(setId).text(response[setId]).appendTo('#set_id_select');
+			$("<option>")
+				.val(setId)
+				.text(response[setId])
+				.appendTo("#set_id_select");
 		}
 	});
 }
 
 function selectSet() {
 	var val = Number.parseInt($(this).val());
-	if (!isNaN(val)) $('#set_id_input').val(val);
+	if (!isNaN(val)) $("#set_id_input").val(val);
 }
 
 function prepare() {
-	var setId = $('#set_id_input').val();
-	$.get('query?id=' + setId, function(response) {
+	var setId = $("#set_id_input").val();
+	$.get("query?id=" + setId, function (response) {
 		state.title = response.title;
 		state.setId = response.id;
 		state.terms = response.terms;
 		state.currentPlayer = adminIndex;
 		// todo address equal terms
-		state.deck = state.terms.map(function(term) {
+		state.deck = state.terms.map(function (term) {
 			return term.index;
 		});
 		shuffleArray(state.deck);
-		state.handSize = $('#hand_size').val();
-		state.boardSize = $('#board_size').val();
+		state.handSize = $("#hand_size").val();
+		state.boardSize = $("#board_size").val();
 		for (var i = 0; i < state.players.length; i++) {
 			state.players[i].state.hand = newHand();
 		}
 		state.board = state.deck.splice(0, state.boardSize);
 		sortBoard();
-		sendState('prepare');
+		sendState("prepare");
 	});
 	return false;
 }
 
 function sortBoard() {
-	state.board.sort(function(a, b) {
+	state.board.sort(function (a, b) {
 		return a - b;
 	});
 }
@@ -67,104 +72,102 @@ function newHand() {
 }
 
 function update() {
-	$('#set_title').text(state.title);
-	$('#set_id').text(state.setId);
+	$("#set_title").text(state.title);
+	$("#set_id").text(state.setId);
 
 	if (state.currentPlayer < 0) return victory();
 
-	show('#timeline_game');
+	show("#timeline_game");
 
-	$('#game_players').empty();
-	state.players.forEach(function(player) {
-		$('<div>')
-			.addClass('bubble')
-			.addClass('inline')
+	$("#game_players").empty();
+	state.players.forEach(function (player) {
+		$("<div>")
+			.addClass("bubble")
+			.addClass("inline")
 			.append(
-				$('<p>').text(
-					player.name + ' (' + player.state.hand.length + ')'
+				$("<p>").text(
+					player.name + " (" + player.state.hand.length + ")"
 				)
 			)
-			.appendTo('#game_players');
+			.appendTo("#game_players");
 	});
-	$('#hand').empty();
-	me().state.hand.forEach(function(index) {
+	$("#hand").empty();
+	me().state.hand.forEach(function (index) {
 		var card = state.terms[index];
-		$('<div>')
-			.addClass('center-parent')
-			.addClass('bubble')
-			.addClass('card')
-			.append($('<p>').text(card.word))
-			.append($('<br>'))
-			.append(
-				$('<img>')
-					.attr('src', card.image)
-					.addClass('card_img')
-			)
-			.addClass('hand_card')
+		$("<div>")
+			.addClass("center-parent")
+			.addClass("bubble")
+			.addClass("card")
+			.append($("<p>").text(card.word))
+			.append($("<br>"))
+			.append($("<img>").attr("src", card.image).addClass("card_img"))
+			.addClass("hand_card")
 			.click(pick)
-			.appendTo('#hand');
+			.appendTo("#hand");
 	});
-	$('#board').empty();
-	state.board.forEach(function(index, position) {
+	$("#board").empty();
+	state.board.forEach(function (index, position) {
 		makeBoardButton();
-		$('<div>')
-			.addClass('center-parent')
-			.addClass('bubble')
-			.addClass('card')
-			.append($('<p>').text(state.terms[index].word))
-			.append($('<p>').text(state.terms[index].definition))
+		$("<div>")
+			.addClass("center-parent")
+			.addClass("bubble")
+			.addClass("card")
+			.append($("<p>").text(state.terms[index].word))
+			.append($("<p>").text(state.terms[index].definition))
 			.append(
-				$('<img>')
-					.attr('src', state.terms[index].image)
-					.addClass('card_img')
+				$("<img>")
+					.attr("src", state.terms[index].image)
+					.addClass("card_img")
 			)
-			.appendTo('#board');
+			.appendTo("#board");
 	});
 	makeBoardButton();
 }
 
 function makeBoardButton() {
-	$('<button>')
-		.addClass('bubble')
-		.addClass('board_button')
+	$("<button>")
+		.addClass("bubble")
+		.addClass("board_button")
 		.click(play)
-		.appendTo('#board');
+		.appendTo("#board");
 }
 
 function pick() {
-	if (!isMyTurn()) return alert('Not your turn!');
-	$('.hand_card').removeClass('selected');
-	$(this).addClass('selected');
+	if (!isMyTurn()) return alert("Not your turn!");
+	$(".hand_card").removeClass("selected");
+	$(this).addClass("selected");
 }
 
 function play() {
-	var selectedIndex = $('.hand_card.selected').index();
+	var selectedIndex = $(".hand_card.selected").index();
 	if (selectedIndex === -1)
-		return alert('select a card from your hand first');
+		return alert("select a card from your hand first");
 	var pickIndex = me().state.hand.splice(selectedIndex, 1)[0];
 	var position = $(this).index() / 2;
 	var correct = isCorrect(pickIndex, position);
-	var selector = correct ? '#correct_answer' : '#wrong_answer';
-	socket.send({ endpoint: 'showImg', selector: selector });
+	var selector = correct ? "#correct_answer" : "#wrong_answer";
+	socket.send({ endpoint: "showImg", selector: selector });
 	state.board.splice(position, 0, pickIndex);
 	if (!correct) {
 		if (state.deck.length === 0)
 			return socket.send({
-				endpoint: 'alert',
-				alert: 'Uh oh, we ran out of cards!',
+				endpoint: "alert",
+				alert: "Uh oh, we ran out of cards!",
 			});
 		me().state.hand.push(state.deck.shift());
 		sortBoard();
 	}
 	x = this;
 	var message =
-		'played ' +
+		"played " +
 		state.terms[pickIndex].word +
-		' - ' +
-		(correct ? 'CORRECT' : 'WRONG');
+		" - " +
+		(correct ? "CORRECT" : "WRONG") +
+		" - " +
+		state.terms[pickIndex].definition;
 	if (correct && me().state.hand.length === 0) {
 		state.currentPlayer = -state.currentPlayer;
-		message += ' and wins!';
+		message += " and wins!";
 	} else {
 		advanceTurn();
 	}
@@ -196,20 +199,20 @@ function equal(index1, index2) {
 function showImg(data) {
 	var selector = data.selector;
 	$(selector).animate(
-		{ 'margin-right': '-100%' },
+		{ "margin-right": "-100%" },
 		{
 			duration: 1200,
-			easing: 'linear',
-			done: function() {
-				$(selector).css('margin-right', '100%');
+			easing: "linear",
+			done: function () {
+				$(selector).css("margin-right", "100%");
 			},
 		}
 	);
 }
 
 function victory(data) {
-	$('#winner').text(state.players[-state.currentPlayer].name);
-	show('#game_end');
+	$("#winner").text(state.players[-state.currentPlayer].name);
+	show("#game_end");
 }
 
 endpoints.showImg = showImg;
