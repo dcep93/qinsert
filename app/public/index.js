@@ -43,6 +43,11 @@ function prepare() {
 		state.title = response.title;
 		state.setId = response.id;
 		state.terms = response.terms;
+		if (new URLSearchParams(window.location.search).get('reverse') !== null) {
+			state.terms.forEach(term => {
+				[term.word, term.definition] = [term.definition, term.word]
+			})
+		}
 		state.currentPlayer = adminIndex;
 		// todo address equal terms
 		state.deck = state.terms.map(function (term) {
