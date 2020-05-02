@@ -44,6 +44,7 @@ function prepare() {
 		state.setId = response.id;
 		state.terms = response.terms;
 		if (new URLSearchParams(window.location.search).get('reverse') !== null) {
+			console.log('swapping')
 			state.terms.forEach(term => {
 				[term.word, term.definition] = [term.definition, term.word]
 			})
