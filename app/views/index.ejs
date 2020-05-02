@@ -1,62 +1,87 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title><%= title %></title>
+	<head>
+		<title><%= title %></title>
 
-<%- include(views+'/head.html') %>
+		<%- include(views+'/head.html') %>
 
-	<script type="text/javascript" src="index.js"></script>
-	<link rel="stylesheet" type="text/css" href="index.css">
-</head>
-<body>
+		<script type="text/javascript" src="index.js"></script>
+		<link rel="stylesheet" type="text/css" href="index.css" />
+	</head>
+	<body>
+		<%- include(views+'/pre.html') %>
 
-<%- include(views+'/pre.html') %>
-
-<div id="global_controls" class="bubble inline">
-	<%- include(views+'/global_controls.html') %>
-	<p>Hand Size: <input id="hand_size" class="control_number" type="number" autocomplete="off" value="6"></p>
-	<p>Board Starting Size: <input id="board_size" class="control_number" type="number" autocomplete="off" value="6"></p>
-	<form id="set_id_form">
-		<select id="set_id_select">
-			<option value="select_set">Select Set</option>
-		</select>
-		<span>Set Id: </span><input id="set_id_input" type="text" value="284065846">
-		<input type="submit" value="Search">
-	</form>
-</div>
-
-
-<div id="controls" class="flex">
-	<div id="game_controls_div"></div>
-	<div class="bubble inline">
-		<p>Set Title: <span id="set_title"></span></p>
-		<p>Set Id: <span id="set_id"></span></p>
-		<p>Current Player: <span id="current_player"></span></p>
-	</div>
-	<div class="bubble inline">
-		<p>Players:</p>
-		<div id="game_players"></div>
-	</div>
-</div>
-
-<div>
-	<div id="timeline_game" hidden>
-		<div class="bubble">
-			<p>Hand:</p>
-			<div id="hand" class="flex"></div>
+		<div id="global_controls" class="bubble inline">
+			<%- include(views+'/global_controls.html') %>
+			<p>
+				Hand Size:
+				<input
+					id="hand_size"
+					class="control_number"
+					type="number"
+					autocomplete="off"
+					value="6"
+				/>
+			</p>
+			<p>
+				Board Starting Size:
+				<input
+					id="board_size"
+					class="control_number"
+					type="number"
+					autocomplete="off"
+					value="6"
+				/>
+			</p>
+			<form id="set_id_form">
+				<select id="set_id_select">
+					<option value="select_set">Select Set</option>
+				</select>
+				<span>Set Id: </span
+				><input id="set_id_input" type="text" value="284065846" />
+				<input type="submit" value="Search" />
+				<div>
+					<label>Swap: <input type="checkbox" id="swap" /></label>
+					<label
+						>Reverse: <input type="checkbox" id="reverse"
+					/></label>
+				</div>
+			</form>
 		</div>
-		<div class="bubble">
-			<p>Board:</p>
-			<div id="board" class="flex"></div>
+
+		<div id="controls" class="flex">
+			<div id="game_controls_div"></div>
+			<div class="bubble inline">
+				<p>Set Title: <span id="set_title"></span></p>
+				<p>Set Id: <span id="set_id"></span></p>
+				<p>Current Player: <span id="current_player"></span></p>
+			</div>
+			<div class="bubble inline">
+				<p>Players:</p>
+				<div id="game_players"></div>
+			</div>
 		</div>
-	</div>
 
-	<div id="game_end" hidden>
-		<p><span id="winner"></span> is the winner!</p>
-	</div>
-</div>
+		<div>
+			<div id="timeline_game" hidden>
+				<div class="bubble">
+					<p>Hand:</p>
+					<div id="hand" class="flex"></div>
+				</div>
+				<div class="bubble">
+					<p>Board:</p>
+					<div id="board" class="flex"></div>
+				</div>
+			</div>
 
-<img id="correct_answer" class="answer_img" src="truck.jpg">
-<img id="wrong_answer" class="answer_img" src="harold.jpg">
+			<div id="game_end" hidden>
+				<p><span id="winner"></span> is the winner!</p>
+			</div>
+		</div>
 
-<%- include(views+'/post.html') %>
+		<img id="correct_answer" class="answer_img" src="truck.jpg" />
+		<img id="wrong_answer" class="answer_img" src="harold.jpg" />
+
+		<%- include(views+'/post.html') %>
+	</body>
+</html>

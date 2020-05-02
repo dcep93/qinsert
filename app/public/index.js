@@ -43,12 +43,11 @@ function prepare() {
 		state.title = response.title;
 		state.setId = response.id;
 		state.terms = response.terms;
-		if (new URLSearchParams(window.location.search).get('reverse') !== null) {
-			console.log('swapping')
-			state.terms.forEach(term => {
-				[term.word, term.definition] = [term.definition, term.word]
-			})
-		}
+		if ($("#reverse").is(":checked")) state.terms.reverse();
+		if ($("#swap").is(":checked"))
+			state.terms.forEach((term) => {
+				[term.word, term.definition] = [term.definition, term.word];
+			});
 		state.currentPlayer = adminIndex;
 		// todo address equal terms
 		state.deck = state.terms.map(function (term) {
@@ -163,7 +162,6 @@ function play() {
 		me().state.hand.push(state.deck.shift());
 		sortBoard();
 	}
-	x = this;
 	var message =
 		"played " +
 		state.terms[pickIndex].word +
