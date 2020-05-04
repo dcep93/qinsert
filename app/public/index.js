@@ -168,7 +168,9 @@ function play() {
 		" - " +
 		(correct ? "CORRECT" : "WRONG") +
 		" - " +
-		state.terms[pickIndex].definition;
+		state.terms[pickIndex].definition +
+		" - " +
+		position;
 	if (correct && me().state.hand.length === 0) {
 		state.currentPlayer = -state.currentPlayer;
 		message += " and wins!";
